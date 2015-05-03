@@ -47,7 +47,14 @@ class Queue7 extends QueueBase {
     $function = $info['worker callback'];
     $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
     $queue = $this->getQueue($name);
-    while (time() < $end && ($item = $queue->claimItem())) {
+    $item = TRUE;
+    $lease_time = drush_get_option('lease-time', NULL);
+    while (time() < $end && $item) {
+      if (empty($lease_time)) {
+        $item = $queue->claimItem();
+      } else {
+        $item = $queue->claimItem($lease_time);
+      }
       $function($item->data);
       $queue->deleteItem($item);
     }

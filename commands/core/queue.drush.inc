@@ -20,6 +20,12 @@ function queue_drush_command() {
       'queue_name' => 'The name of the queue to run, as defined in either hook_queue_info or hook_cron_queue_info.',
     ),
     'required-arguments' => TRUE,
+    'options' => array(
+      'lease-time' => array(
+        'description' => dt('Optional. Lease time (in seconds). How much time each queue item will be leased for when claimed for processing. Default (if unspecified) depends on queue backend.'),
+        'example-value' => '3600',
+      ),
+    ),
   );
   $items['queue-list'] = array(
     'description' => 'Returns a list of all defined queues',
